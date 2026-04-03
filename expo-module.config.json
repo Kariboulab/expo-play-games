@@ -1,8 +1,5 @@
 {
-  "platforms": ["apple", "android", "web"],
-  "apple": {
-    "modules": ["ExpoPlayGamesModule"]
-  },
+  "platforms": ["android"],
   "android": {
     "modules": ["expo.modules.playgames.ExpoPlayGamesModule"]
   }

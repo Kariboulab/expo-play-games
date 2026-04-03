@@ -1,12 +1,20 @@
 import { NativeModule, requireNativeModule } from 'expo';
 
-import { ExpoPlayGamesModuleEvents } from './ExpoPlayGames.types';
+import { PlayerInfo } from './ExpoPlayGames.types';
 
-declare class ExpoPlayGamesModule extends NativeModule<ExpoPlayGamesModuleEvents> {
-  PI: number;
-  hello(): string;
-  setValueAsync(value: string): Promise<void>;
+declare class ExpoPlayGamesModule extends NativeModule {
+  signIn(): Promise<boolean>;
+  signOut(): Promise<void>;
+  isSignedIn(): Promise<boolean>;
+  getCurrentPlayer(): Promise<PlayerInfo>;
+
+  submitScore(leaderboardId: string, score: number): Promise<boolean>;
+  showLeaderboard(leaderboardId: string): Promise<void>;
+  showAllLeaderboards(): Promise<void>;
+
+  unlockAchievement(achievementId: string): Promise<boolean>;
+  incrementAchievement(achievementId: string, steps: number): Promise<boolean>;
+  showAchievements(): Promise<void>;
 }
 
-// This call loads the native module object from the JSI.
 export default requireNativeModule<ExpoPlayGamesModule>('ExpoPlayGames');
