@@ -1,6 +1,6 @@
 {
   "name": "expo-play-games",
-  "version": "0.1.0",
+  "version": "0.1.0-beta.1",
   "description": "Expo module wrapping Google Play Games Services v2 for Android (leaderboards, achievements, sign-in)",
   "main": "build/index.js",
   "types": "build/index.d.ts",

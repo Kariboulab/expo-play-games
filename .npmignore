@@ -1,3 +1,5 @@
+CLAUDE.md
+
 # Exclude all top-level hidden directories by convention
 /.*/
 
