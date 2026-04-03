@@ -114,7 +114,7 @@ IDs are the string identifiers from Play Console (e.g. `CgkI...`). Pass them dir
 
 ## Not supported
 
-- iOS — use [`react-native-game-center`](https://github.com/dominicarrojado/react-native-game-center) or similar for iOS Game Center integration
+- iOS - This module is specifically for Android.`
 
 ## Out of scope (v1)
 
