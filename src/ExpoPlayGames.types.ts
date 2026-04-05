@@ -3,3 +3,5 @@ export type PlayerInfo = {
   displayName: string;
   title: string | null;
 };
+
+export type AchievementResult = boolean;

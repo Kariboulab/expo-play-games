@@ -1,6 +1,7 @@
 package expo.modules.playgames
 
 import android.app.Activity
+import android.util.Log
 import com.google.android.gms.games.PlayGames
 import com.google.android.gms.games.PlayGamesSdk
 import expo.modules.kotlin.modules.Module
@@ -20,9 +21,9 @@ class ExpoPlayGamesModule : Module() {
     // Lifecycle — initialize the SDK as soon as the module is created
     // -------------------------------------------------------------------------
     OnCreate {
-      appContext.activityProvider?.currentActivity?.let { activity ->
-        PlayGamesSdk.initialize(activity)
-      }
+      val ctx = appContext.reactContext?.applicationContext
+      Log.d("ExpoPlayGames", "OnCreate — applicationContext=${ctx != null}")
+      ctx?.let { PlayGamesSdk.initialize(it) }
     }
 
     // -------------------------------------------------------------------------
@@ -33,9 +34,11 @@ class ExpoPlayGamesModule : Module() {
       val client = PlayGames.getGamesSignInClient(activity)
       client.signIn()
         .addOnSuccessListener { result ->
+          Log.d("ExpoPlayGames", "signIn result: isAuthenticated=${result.isAuthenticated}")
           promise.resolve(result.isAuthenticated)
         }
         .addOnFailureListener { e ->
+          Log.e("ExpoPlayGames", "signIn failed: code=${(e as? com.google.android.gms.common.api.ApiException)?.statusCode} message=${e.message}")
           promise.reject("SIGN_IN_FAILED", e.message ?: "Sign in failed", e)
         }
     }
@@ -93,7 +96,7 @@ class ExpoPlayGamesModule : Module() {
       val client = PlayGames.getLeaderboardsClient(activity)
       client.getLeaderboardIntent(leaderboardId)
         .addOnSuccessListener { intent ->
-          activity.startActivity(intent)
+          activity.startActivityForResult(intent, 0)
           promise.resolve(null)
         }
         .addOnFailureListener { e ->
@@ -105,10 +108,17 @@ class ExpoPlayGamesModule : Module() {
       val client = PlayGames.getLeaderboardsClient(activity)
       client.allLeaderboardsIntent
         .addOnSuccessListener { intent ->
-          activity.startActivity(intent)
+          Log.d("ExpoPlayGames", "showAllLeaderboards: got intent, starting activity")
+          try {
+            activity.startActivityForResult(intent, 0)
+            Log.d("ExpoPlayGames", "showAllLeaderboards: startActivity called")
+          } catch (e: Exception) {
+            Log.e("ExpoPlayGames", "showAllLeaderboards: startActivity failed: ${e.message}")
+          }
           promise.resolve(null)
         }
         .addOnFailureListener { e ->
+          Log.e("ExpoPlayGames", "showAllLeaderboards failed: code=${(e as? com.google.android.gms.common.api.ApiException)?.statusCode} message=${e.message}")
           promise.reject("SHOW_ALL_LEADERBOARDS_FAILED", e.message ?: "Could not show leaderboards", e)
         }
     }
@@ -143,7 +153,7 @@ class ExpoPlayGamesModule : Module() {
       val client = PlayGames.getAchievementsClient(activity)
       client.achievementsIntent
         .addOnSuccessListener { intent ->
-          activity.startActivity(intent)
+          activity.startActivityForResult(intent, 0)
           promise.resolve(null)
         }
         .addOnFailureListener { e ->
